@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himal AI — Automation Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #04080f;
+  --bg2: #080e1a;
+  --surface: #0d1626;
+  --border: rgba(255,255,255,0.07);
+  --accent: #0cff8c;
+  --accent-dim: rgba(12,255,140,0.1);
+  --accent-glow: rgba(12,255,140,0.35);
+  --text: #edf2ff;
+  --muted: #5e7399;
+  --muted2: #8aa0c0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(12,255,140,0.4);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s ease, width 0.25s, height 0.25s, border-color 0.25s;
+}
+body:hover .cursor { opacity: 1; }
+
+/* ── GRID OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(12,255,140,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12,255,140,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── AMBIENT GLOWS ── */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.blob1 { width: 700px; height: 700px; background: rgba(12,255,140,0.05); top: -200px; left: -250px; }
+.blob2 { width: 500px; height: 500px; background: rgba(0,100,255,0.05); bottom: 0; right: -200px; }
+.blob3 { width: 400px; height: 400px; background: rgba(12,255,140,0.04); top: 60%; left: 40%; }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 68px;
+  background: rgba(4,8,15,0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: inherit;
+}
+.logo-pulse {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
+  animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity:1; transform: scale(1); }
+  50% { opacity:0.3; transform: scale(0.6); }
+}
+
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  color: var(--muted2);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--accent);
+  color: #000 !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  padding: 8px 18px;
+  border-radius: 7px;
+  transition: box-shadow 0.2s, transform 0.2s !important;
+}
+.nav-cta:hover {
+  box-shadow: 0 0 30px var(--accent-glow) !important;
+  transform: translateY(-1px) !important;
+  color: #000 !important;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 120px 56px 80px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(12,255,140,0.2);
+  background: var(--accent-dim);
+  padding: 5px 16px;
+  border-radius: 100px;
+  margin-bottom: 36px;
+  animation: fadeup 0.7s ease both;
+}
+
+.hero h1 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+  max-width: 1000px;
+  animation: fadeup 0.7s ease 0.08s both;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent) 20%, #00cfff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  margin-top: 28px;
+  color: var(--muted2);
+  font-size: 18px;
+  max-width: 480px;
+  line-height: 1.75;
+  font-weight: 300;
+  animation: fadeup 0.7s ease 0.16s both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 48px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeup 0.7s ease 0.24s both;
+}
+
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 15px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 0 50px rgba(12,255,140,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-main:hover { transform: translateY(-3px); box-shadow: 0 0 80px rgba(12,255,140,0.5); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  color: var(--muted2);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 15px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: rgba(255,255,255,0.02);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: var(--text); }
+
+/* ── STATS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 80px;
+  width: 100%;
+  max-width: 700px;
+  animation: fadeup 0.7s ease 0.32s both;
+}
+.stat-item {
+  background: var(--bg);
+  padding: 24px 20px;
+  text-align: center;
+}
+.stat-val {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: 34px;
+  letter-spacing: -1.5px;
+  color: var(--accent);
+}
+.stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.3px; }
+
+@keyframes fadeup {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION SHELL ── */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 100px 56px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.section-h {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 4.5vw, 52px);
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+
+.section-p {
+  color: var(--muted2);
+  font-size: 17px;
+  max-width: 480px;
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 56px;
+}
+
+/* ── SERVICES ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.svc {
+  background: linear-gradient(145deg, var(--surface), var(--bg2));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.svc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), rgba(12,255,140,0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.svc:hover { border-color: rgba(12,255,140,0.25); transform: translateY(-5px); }
+.svc:hover::after { opacity: 1; }
+
+.svc-num {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.svc-icon {
+  font-size: 28px;
+  margin-bottom: 16px;
+  display: block;
+}
+.svc h3 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.svc p { color: var(--muted2); font-size: 14px; line-height: 1.75; }
+.svc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+.svc-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+
+/* ── PROJECTS ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.proj {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+  position: relative;
+}
+.proj:hover { border-color: rgba(12,255,140,0.25); transform: translateY(-4px); }
+
+.proj-thumb {
+  height: 180px;
+  background: linear-gradient(135deg, #0d1f35, #08131f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  position: relative;
+  overflow: hidden;
+}
+.proj-thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 30%, rgba(12,255,140,0.08), transparent 60%);
+}
+
+.proj-body { padding: 24px 26px; }
+.proj-body h3 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.proj-body p { color: var(--muted2); font-size: 14px; line-height: 1.7; margin-bottom: 18px; }
+
+.proj-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid rgba(12,255,140,0.3);
+  padding-bottom: 2px;
+  transition: border-color 0.2s;
+}
+.proj-link:hover { border-color: var(--accent); }
+
+.proj-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(12,255,140,0.2);
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* ── PROCESS ── */
+.process-wrap {
+  background: rgba(255,255,255,0.01);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.proc {
+  padding: 40px 30px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.proc:last-child { border-right: none; }
+.proc-num {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  color: rgba(12,255,140,0.12);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.proc h4 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.proc p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+/* ── TOOLS ── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: all 0.25s;
+  cursor: default;
+}
+.tool span { display: block; font-size: 24px; margin-bottom: 8px; }
+.tool:hover {
+  border-color: rgba(12,255,140,0.25);
+  background: var(--accent-dim);
+  color: var(--text);
+  transform: translateY(-3px);
+}
+
+/* ── CONTACT ── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.contact-left h2 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 900;
+  font-size: clamp(30px, 4vw, 48px);
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.contact-left p { color: var(--muted2); font-size: 16px; line-height: 1.75; font-weight: 300; }
+
+.contact-methods { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; }
+.cmethod {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.cmethod:hover { border-color: rgba(12,255,140,0.3); transform: translateX(4px); }
+.cmethod-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.cmethod strong { display: block; font-size: 14px; font-weight: 600; }
+.cmethod span { color: var(--muted2); font-size: 13px; }
+
+/* ── FORM ── */
+.form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field input,
+.field textarea,
+.field select {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 15px;
+  color: var(--text);
+  font-family: 'Satoshi', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  width: 100%;
+}
+.field select option { background: #0d1626; }
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: rgba(12,255,140,0.35);
+  background: rgba(12,255,140,0.03);
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--muted); }
+.field textarea { resize: vertical; min-height: 110px; }
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: -0.3px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(12,255,140,0.15);
+  align-self: flex-start;
+}
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(12,255,140,0.4);
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 36px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.footer-copy { font-size: 13px; color: var(--muted); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: var(--muted); font-size: 13px; text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text); }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+  nav { padding: 0 20px; }
+  .nav-links a:not(.nav-cta) { display: none; }
+  .hero { padding: 110px 24px 60px; }
+  .hero h1 { letter-spacing: -2px; }
+  .wrap { padding: 70px 24px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .proc { border-right: none; border-bottom: 1px solid var(--border); }
+  .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+  footer { flex-direction: column; text-align: center; padding: 28px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- Blobs -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-pulse"></div>
+    Himal AI
+  </a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+    <a href="https://wa.me/97466949948" target="_blank" class="nav-cta">
+      💬 WhatsApp Me
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">
+      <span class="logo-pulse" style="width:6px;height:6px;display:inline-block;border-radius:50%;background:var(--accent);animation:blink 2s infinite;"></span>
+      Available for new projects
+    </div>
+    <h1>Grow Your Business<br>With <em>AI Automation</em></h1>
+    <p class="hero-desc">I build intelligent systems that save you time, generate leads, and grow revenue — all on autopilot.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/97466949948" target="_blank" class="btn-main">💬 Chat on WhatsApp</a>
+      <a href="#services" class="btn-ghost">Explore Services ↓</a>
+    </div>
+    <div class="stats">
+      <div class="stat-item"><div class="stat-val">50+</div><div class="stat-lbl">Automations Built</div></div>
+      <div class="stat-item"><div class="stat-val">20+</div><div class="stat-lbl">Clients Served</div></div>
+      <div class="stat-item"><div class="stat-val">10k+</div><div class="stat-lbl">Hours Saved</div></div>
+      <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Satisfaction</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="wrap" id="services">
+  <span class="section-label reveal">What I Offer</span>
+  <h2 class="section-h reveal">Services Built<br>for Growth</h2>
+  <p class="section-p reveal">From workflow automation to AI chatbots — every system I build runs while you focus on what matters.</p>
+
+  <div class="services-grid">
+    <div class="svc reveal">
+      <div class="svc-num">01</div>
+      <span class="svc-icon">⚡</span>
+      <h3>AI Workflow Automation</h3>
+      <p>Eliminate manual work by connecting your apps and automating repetitive tasks using n8n, Zapier, and Make.com.</p>
+      <div class="svc-tags"><span class="svc-tag">n8n</span><span class="svc-tag">Zapier</span><span class="svc-tag">Make</span><span class="svc-tag">APIs</span></div>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">02</div>
+      <span class="svc-icon">🎯</span>
+      <h3>Lead Generation</h3>
+      <p>Auto-collect high-quality leads from multiple sources and push them straight into your CRM or Google Sheets.</p>
+      <div class="svc-tags"><span class="svc-tag">Apollo</span><span class="svc-tag">LinkedIn</span><span class="svc-tag">Google Sheets</span></div>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">03</div>
+      <span class="svc-icon">✉️</span>
+      <h3>Email Automation</h3>
+      <p>Build personalized cold email sequences and follow-up flows that convert without manual effort.</p>
+      <div class="svc-tags"><span class="svc-tag">Instantly</span><span class="svc-tag">Lemlist</span><span class="svc-tag">Smartlead</span></div>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">04</div>
+      <span class="svc-icon">🤖</span>
+      <h3>AI Chatbots</h3>
+      <p>Deploy 24/7 AI assistants on Telegram, WhatsApp, or your website to answer, qualify, and book — automatically.</p>
+      <div class="svc-tags"><span class="svc-tag">ChatGPT</span><span class="svc-tag">Claude</span><span class="svc-tag">Telegram</span></div>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">05</div>
+      <span class="svc-icon">📊</span>
+      <h3>AI Content Creation</h3>
+      <p>Generate social posts, blogs, and email content at scale using AI pipelines — in your brand voice.</p>
+      <div class="svc-tags"><span class="svc-tag">GPT-4</span><span class="svc-tag">Airtable</span><span class="svc-tag">Notion</span></div>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">06</div>
+      <span class="svc-icon">🔗</span>
+      <h3>CRM Integration</h3>
+      <p>Connect every tool to your CRM with automatic pipeline updates, deal tracking, and follow-up reminders.</p>
+      <div class="svc-tags"><span class="svc-tag">HubSpot</span><span class="svc-tag">GoHighLevel</span><span class="svc-tag">Sheets</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section class="wrap" id="projects">
+  <span class="section-label reveal">Portfolio</span>
+  <h2 class="section-h reveal">Real Projects,<br>Real Results</h2>
+  <p class="section-p reveal">A selection of live automations and web projects I've built for clients.</p>
+
+  <div class="projects-grid">
+    <div class="proj reveal">
+      <div class="proj-thumb">⌚</div>
+      <span class="proj-badge">Live</span>
+      <div class="proj-body">
+        <h3>Smartwatch Landing Page</h3>
+        <p>A fully responsive, conversion-optimised product landing page for a smartwatch brand — clean layout, smooth animations.</p>
+        <a href="https://himal80.github.io/Smartwatch-product-page/" target="_blank" class="proj-link">View Live Demo →</a>
+      </div>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-thumb">🤖</div>
+      <span class="proj-badge">Automation</span>
+      <div class="proj-body">
+        <h3>AI Lead Automation System</h3>
+        <p>A Telegram bot that captures leads and syncs them in real-time to Google Sheets — eliminating manual data entry for a business.</p>
+        <a href="#contact" class="proj-link">Inquire About This →</a>
+      </div>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-thumb">📧</div>
+      <span class="proj-badge">Automation</span>
+      <div class="proj-body">
+        <h3>Cold Email Outreach Pipeline</h3>
+        <p>Automated end-to-end cold email system: lead scraping → verification → personalised sequence → reply detection — all hands-free.</p>
+        <a href="#contact" class="proj-link">Learn More →</a>
+      </div>
+    </div>
+    <div class="proj reveal">
+      <div class="proj-thumb">💬</div>
+      <span class="proj-badge">AI</span>
+      <div class="proj-body">
+        <h3>WhatsApp AI Assistant</h3>
+        <p>24/7 AI customer service bot for a local business — handles FAQs, books appointments, and qualifies leads automatically.</p>
+        <a href="#contact" class="proj-link">Get Something Similar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROCESS -->
+<div class="process-wrap">
+  <section class="wrap" id="process" style="padding-bottom:80px;">
+    <span class="section-label reveal">How It Works</span>
+    <h2 class="section-h reveal">From Call to Live<br>in Under 2 Weeks</h2>
+    <div class="process-grid" style="margin-top:48px;">
+      <div class="proc reveal">
+        <div class="proc-num">01</div>
+        <h4>Discovery Call</h4>
+        <p>We map your current workflow and pinpoint the highest-impact areas to automate first.</p>
+      </div>
+      <div class="proc reveal">
+        <div class="proc-num">02</div>
+        <h4>Custom Proposal</h4>
+        <p>I deliver a clear roadmap — scope, timeline, cost, and expected ROI — no surprises.</p>
+      </div>
+      <div class="proc reveal">
+        <div class="proc-num">03</div>
+        <h4>Build & Test</h4>
+        <p>Your automation is built, stress-tested, and refined before it ever touches your data.</p>
+      </div>
+      <div class="proc reveal">
+        <div class="proc-num">04</div>
+        <h4>Launch & Support</h4>
+        <p>We go live together and I stay available for ongoing support, tweaks, and scaling.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TOOLS -->
+<section class="wrap">
+  <span class="section-label reveal">Tech Stack</span>
+  <h2 class="section-h reveal">Tools I Use Daily</h2>
+  <p class="section-p reveal">Best-in-class platforms to build reliable, scalable automations.</p>
+  <div class="tools-grid">
+    <div class="tool reveal"><span>🤖</span>ChatGPT</div>
+    <div class="tool reveal"><span>🔮</span>Claude AI</div>
+    <div class="tool reveal"><span>⚡</span>n8n</div>
+    <div class="tool reveal"><span>🔗</span>Zapier</div>
+    <div class="tool reveal"><span>🔄</span>Make.com</div>
+    <div class="tool reveal"><span>📬</span>Instantly</div>
+    <div class="tool reveal"><span>🎯</span>Apollo.io</div>
+    <div class="tool reveal"><span>📊</span>Airtable</div>
+    <div class="tool reveal"><span>📋</span>Notion</div>
+    <div class="tool reveal"><span>🟠</span>HubSpot</div>
+    <div class="tool reveal"><span>📱</span>WhatsApp</div>
+    <div class="tool reveal"><span>🤝</span>Telegram</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section class="wrap" id="contact">
+  <div class="contact-grid">
+    <div class="contact-left">
+      <span class="section-label reveal">Let's Work Together</span>
+      <h2 class="reveal">Ready to<br>Automate?</h2>
+      <p class="reveal" style="margin-top:14px;">Book a free 30-minute call. I'll analyse your workflow and show you exactly what can be automated — no obligation.</p>
+
+      <div class="contact-methods">
+        <a href="https://wa.me/97466949948" target="_blank" class="cmethod reveal">
+          <div class="cmethod-icon">💬</div>
+          <div><strong>WhatsApp</strong><span>+974 6694 9948 — fastest reply</span></div>
+        </a>
+        <a href="mailto:hemalraj748@gmail.com" class="cmethod reveal">
+          <div class="cmethod-icon">📧</div>
+          <div><strong>Email</strong><span>hemalraj748@gmail.com</span></div>
+        </a>
+        <div class="cmethod reveal" style="cursor:default;">
+          <div class="cmethod-icon">⏱️</div>
+          <div><strong>Response Time</strong><span>Within 24 hours</span></div>
+        </div>
+      </div>
+    </div>
+
+    <form
+      class="form reveal"
+      action="https://formsubmit.co/hemalraj748@gmail.com"
+      method="POST"
+    >
+      <!-- Formsubmit config -->
+      <input type="hidden" name="_subject" value="New enquiry from Himal AI website">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div class="form-row">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" name="first_name" placeholder="John" required>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" name="last_name" placeholder="Smith">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="john@company.com" required>
+      </div>
+      <div class="field">
+        <label>Service Interested In</label>
+        <select name="service">
+          <option value="">Select a service…</option>
+          <option>AI Workflow Automation</option>
+          <option>Lead Generation</option>
+          <option>Email Automation</option>
+          <option>AI Chatbot</option>
+          <option>CRM Integration</option>
+          <option>Multiple / Not Sure</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Your Message</label>
+        <textarea name="message" placeholder="Tell me about your business and what you'd like to automate…" required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:9px;">
+    <div class="logo-pulse"></div>
+    Himal AI
+  </a>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <p class="footer-copy">© 2026 Himal AI Automation. All rights reserved.</p>
+</footer>
+
+<script>
+// ── Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx + 'px';
+  cursor.style.top  = my + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a,button,.svc,.proj,.tool,.cmethod').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '16px'; cursor.style.height = '16px';
+    ring.style.width = '52px'; ring.style.height = '52px';
+    ring.style.borderColor = 'rgba(12,255,140,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px'; cursor.style.height = '10px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(12,255,140,0.4)';
+  });
+});
+
+// ── Service card mouse glow
+document.querySelectorAll('.svc').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%';
+    const y = ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%';
+    card.style.setProperty('--mx', x);
+    card.style.setProperty('--my', y);
+  });
+});
+
+// ── Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 60);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ── Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth', block:'start' }); }
+  });
+});
+</script>
+</body>
+</html>
