@@ -1,7 +1,7 @@
 # Ai automation real web_info demo📂
 
 ## 🔥 Live Demo
-👉 https://himal80.github.io/Sales-Watch-web/
+👉 https://himal80.github.io/Ai-auto-web/
 
 ## 📌 About
 Modern responsive product landing page.
