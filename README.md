@@ -4,7 +4,7 @@
 👉 https://himal80.github.io/Ai-auto-web/
 
 ## 📌 About
-Modern responsive product landing page.
+Ai automation my info+real work web landing page.
 
 ## ⚙️ Features
 - Clean UI
